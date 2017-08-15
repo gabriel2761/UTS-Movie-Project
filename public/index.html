@@ -51,6 +51,8 @@
 					$('#movie-duration').text(data.duration);
 					$('#movie-genre').text(data.genre);
 					$('#movie-synopsis').text(data.synopsis);
+				}).fail(function(error) {
+					console.log(error.responseText);
 				});
 			});
 
