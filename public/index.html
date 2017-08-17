@@ -5,65 +5,21 @@
 	<title>UTS Movie Tutorial Week 4</title>
 </head>
 <body>
-	<input id="title" type="text" placeholder="Gone with the Wind">
-	<br>
 
-	<input id="date" type="date">
-	<br>
+	<main id="root"></main>
 
-	<input id="duration" type="text" placeholder="85 minutes">
-	<br>
+    <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 
-	<input id="genre" type="text" placeholder="Comedy">
-	<br>
-
-	<textarea id="synopsis" rows="4" cols="50">
-	</textarea>
-	<br>
-
-	<button id="update">Update</button>
-
-
-	<h1 id="movie-title"></h1>
-	<p id="movie-date"></p>
-	<p id="movie-duration"></p>
-	<p id="movie-genre"></p>
-	<p id="movie-synopsis"></p>
-
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-
-	<script>
-		$(function() {
-			$('#update').click(function() {
-				$.ajax({
-					method: 'post',
-					url: '/movie',
-					data: {
-						title: $('#title').val(),
-						date: $('#date').val(),
-						duration: $('#duration').val(),
-						genre: $('#genre').val(),
-						synopsis: $('#synopsis').val(),
-					}
-				}).done(function(data) {
-					$('#movie-title').text(data.title);
-					$('#movie-date').text(data.date);
-					$('#movie-duration').text(data.duration);
-					$('#movie-genre').text(data.genre);
-					$('#movie-synopsis').text(data.synopsis);
-				}).fail(function(error) {
-					console.log(error.responseText);
-				});
-			});
-
-			$.get('/init', (data) => {
-				$('#movie-title').text(data.title);
-				$('#movie-date').text(data.date);
-				$('#movie-duration').text(data.duration);
-				$('#movie-genre').text(data.genre);
-				$('#movie-synopsis').text(data.synopsis);
-			});
-		});
+	<script type="text/jsx">
+		ReactDOM.render(
+			<h1>Hello, world!</h1>,
+			document.getElementById('root')
+		);
 	</script>
+
+
+
 </body>
 </html>
