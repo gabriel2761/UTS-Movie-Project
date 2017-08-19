@@ -31,13 +31,13 @@ app.post('/movie', (request, response) => {
 	genre = request.body.genre;
 	synopsis = request.body.synopsis;
 
+	console.log(request.body.title);
+
 	request.checkBody('title').notEmpty();
-	request.sanitizeBody('title').toBoolean();
 
 	request.getValidationResult().then(function(result) {
 		if (!result.isEmpty()) {
 			response.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
-
 			return;
 		}
 
@@ -48,14 +48,7 @@ app.post('/movie', (request, response) => {
 			genre: genre,
 			synopsis: synopsis
 		});
-
-		// request.json({
-			// urlparam: req.params.urlparam,
-			// getparam: req.query.getparam,
-			// postparam: req.body.postparam
-		// });
 	});
-
 });
 
 app.listen(7000, () => {
