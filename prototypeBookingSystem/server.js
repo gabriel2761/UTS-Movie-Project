@@ -10,6 +10,17 @@ app.use(expressValidator()); // this line must be immediately after any of the b
 
 const bookings = [];
 
+const username = 'user';
+const password = 'password';
+
+app.post('/login', (request, response) => {
+  if (username === request.body.username && password === request.body.password) {
+	response.send(true);
+  } else {
+	response.send(false);
+  }
+});
+
 app.get('/bookings', (request, response) => {
 	response.send(bookings);
 });

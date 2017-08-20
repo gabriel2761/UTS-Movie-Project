@@ -32,12 +32,48 @@ class BookingForm extends React.Component {
   }
 }
 
+class LoginPage extends React.Component {
+  _login(event) {
+	var self = this;
+	event.preventDefault();
 
+	axios.post('/login', {
+	  username: this.username.value,
+	  password: this.password.value
+	})
+
+	.then((response) => {
+	  if (response.data) {
+		self.props.authenticateUser();
+	  } else {
+		alert('Incorrect username or password');
+	  }
+	})
+
+	.catch((error) => {
+	  console.log('error happens');
+	  console.log(error);
+	});
+  }
+
+  render() {
+	return (
+	  <form onSubmit={this._login.bind(this)}>
+		<input type="text" placeholder="Username" ref={username => this.username = username} />
+		<br />
+		<input type="password" placeholder="Password" ref={password => this.password = password} />
+		<br />
+		<button type="submit">Login</button>
+	  </form>
+	);
+  }
+}
 
 class BookingPage extends React.Component {
   constructor() {
 	super();
 	this.state = {
+	  loggedIn: false,
 	  bookings: []
 	};
   }
@@ -48,12 +84,14 @@ class BookingPage extends React.Component {
 	  this.setState({
 		bookings: response.data
 	  });
-
-	  console.log(this.state.bookings);
 	})
 	.catch((error) => {
 	  console.log(error);
 	});
+  }
+
+  _setLoggedIn() {
+	this.setState({ loggedIn: true });
   }
 
   componentDidMount() {
@@ -61,14 +99,20 @@ class BookingPage extends React.Component {
   }
 
   render() {
-	return (
-	  <div>
-		<BookingForm updateBookings={this._updateBookings.bind(this)} />
-		<ul>
-		  {this.state.bookings.map((booking, key) => <li key={key}>{booking.date} - {booking.time}</li>)}
-		</ul>
-	  </div>
-	);
+	if (this.state.loggedIn) {
+	  return (
+		<div>
+		  <BookingForm updateBookings={this._updateBookings.bind(this)} />
+		  <ul>
+			{this.state.bookings.map((booking, key) => <li key={key}>{booking.date} - {booking.time}</li>)}
+		  </ul>
+		</div>
+	  );
+	} else {
+	  return(
+		<LoginPage authenticateUser={this._setLoggedIn.bind(this)} />
+	  );
+	}
   }
 }
 
