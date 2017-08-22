@@ -1,3 +1,9 @@
+/**
+ * React component for the booking form to submit data.
+ * Contains 2 inputs for Date and Time that submits a
+ * booking to the server. This sends it to the express
+ * router which is accessable with the /book url
+ */
 class BookingForm extends React.Component {
   render() {
 	return (
@@ -32,6 +38,12 @@ class BookingForm extends React.Component {
   }
 }
 
+/**
+ * Login form that contains two inputs for the username and password
+ * This submits data to the express router which enables the user
+ * to log in. If successful, it switches changes the state of parent
+ * component to logged in.
+ */
 class LoginPage extends React.Component {
   _login(event) {
 	var self = this;
@@ -51,7 +63,6 @@ class LoginPage extends React.Component {
 	})
 
 	.catch((error) => {
-	  console.log('error happens');
 	  console.log(error);
 	});
   }
@@ -69,6 +80,12 @@ class LoginPage extends React.Component {
   }
 }
 
+/**
+ * Main Parent component which contains the other components
+ * Contains a logged in state which shows the booking page or
+ * log in page whether the user logged in. Also holds
+ * the number of bookings within a state to be shows to the user.
+ */
 class BookingPage extends React.Component {
   constructor() {
 	super();
@@ -85,6 +102,7 @@ class BookingPage extends React.Component {
 		bookings: response.data
 	  });
 	})
+
 	.catch((error) => {
 	  console.log(error);
 	});
@@ -116,6 +134,9 @@ class BookingPage extends React.Component {
   }
 }
 
+/**
+ * Renders the Main Component onto app
+ */
 ReactDOM.render(
   <BookingPage />,
   document.getElementById('root')
