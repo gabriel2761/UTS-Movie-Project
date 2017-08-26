@@ -30,23 +30,23 @@ if (true) return;
 ```
 6. Brackets must have a space before the parenthesis and keyword
 ```js
-	// Bad
-	if(true){
-	}
+// Bad
+if(true){
+}
 
-	// Good
-	if (true) {
-	}
+// Good
+if (true) {
+}
 ```
 7. Nested functions should be written in arrow notation
 ```js
-	// Good
-	forEach(() => {
-	});
+// Good
+forEach(() => {
+});
 
-	// Bad
-	forEach(function() {
-	});
+// Bad
+forEach(function() {
+});
 ```
 8. Requiring modules must be declared with `const`
 ```js
@@ -57,28 +57,28 @@ const module = require('module'); // Good
 
 9. Use javascript truthy and falsy values whenever necessary
 ```js
-	// Bad
-	if (myVar == null) {
-	}
+// Bad
+if (myVar == null) {
+}
 
-	// Good
-	if (!myVar) {
-	}
+// Good
+if (!myVar) {
+}
 ```
 
 10. Prefer forEach over for loops to iterate over arrays
 ```js
-	// Bad
-	const arr = [1, 2, 3, 4, 5];
-	for (let i = 0; i < arr.length; i++) {
-		console.log(arr[i]);
-	}
+// Bad
+const arr = [1, 2, 3, 4, 5];
+for (let i = 0; i < arr.length; i++) {
+	console.log(arr[i]);
+}
 
-	// Good
-	const arr = [1, 2, 3, 4, 5];
-	arr.forEach((value) => {
-		console.log(value);
-	});
+// Good
+const arr = [1, 2, 3, 4, 5];
+arr.forEach((value) => {
+	console.log(value);
+});
 ```
 
 11. Prefer single quotes over double quotes
@@ -90,10 +90,10 @@ const message = 'Hello, World' // Good
 
 12. Prefer string interpolation over concatenation on variabes in the middle of the string
 ```js
-	const myString = 'five plus one is ' + (5 + 1) + '. More text'; // Bad
+const myString = 'five plus one is ' + (5 + 1) + '. More text'; // Bad
 
-	const myString = `five plus one is ${5 + 1}. More text`; // Good
-	const myString = 'five plus one is ' + (5 + 1); // Fine
+const myString = `five plus one is ${5 + 1}. More text`; // Good
+const myString = 'five plus one is ' + (5 + 1); // Fine
 ```
 
 13. Don't chain variable assignments
