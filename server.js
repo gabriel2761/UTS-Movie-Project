@@ -39,7 +39,7 @@ app.get('/bookings', (request, response) => {
 
 app.post('/book', (request, response) => {
   //bookings.push(request.body);
-        
+
   MongoClient.connect(mongourl, function(err, db) {
     assert.equal(null, err);
     db.collection('bookings').insertOne(request.body,function(err, r) {
