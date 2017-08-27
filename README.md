@@ -1,11 +1,15 @@
 ## Coding Standards
 
 1. Tabs not spaces
-2. Variables are in camelCase
+2. Variables are in camelCase. Constant values are in UPPER_CASE SNAKE_CASE, unless the are required modules.
 ```js
 var hello_world // Bad
 
 var helloWorld // Good
+
+const PORT_NUMBER = 5000; // Good
+
+const module = require('module'); // Good
 ```
 3. Classes should be documented in JsDoc
 4. Don't Abbreviate variables
