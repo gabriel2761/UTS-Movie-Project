@@ -2,60 +2,84 @@ const util = require('util');
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const app = express();
-const MongoClient = require('mongodb').MongoClient, assert = require('assert');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 const mongourl = 'mongodb://localhost:27017/bookingSystem';
+const app = express();
+
+const PORT = 3000;
+var isAdmin = false;
 
 app.use(express.static('public'));
 app.use(express.bodyParser());
 app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
 
-//const bookings = [];
 
-const username = 'user';
-const password = 'password';
+// Creates the admin account if not already created
+MongoClient.connect(mongourl, (err, db) => {
+	assert.equal(null, err);
+
+	db.collection('users').insertOne(
+		{ username: 'admin', password: 'password', admin: true },
+		{ upsert: true }
+	);
+
+	db.close();
+});
 
 app.post('/login', (request, response) => {
-  if (username === request.body.username && password === request.body.password) {
-	response.send(true);
-  } else {
-	response.send(false);
-  }
+	let username = request.body.username;
+	let password = request.body.password;
+
+	MongoClient.connect(mongourl, (err, db) => {
+		assert.equal(null, err);
+
+		db.collection('users').findOne({
+			username: username,
+			password: password
+		}, (err, result) => {
+			if (!result) {
+				response.send(false);
+				db.close();
+				return;
+			}
+
+			if (result.admin) {
+				isAdmin = true;
+			}
+
+			response.send(true);
+			db.close();
+		});
+	});
 });
 
 app.get('/bookings', (request, response) => {
-  //response.send(bookings);
+	MongoClient.connect(mongourl,(err, db) => {
+    	assert.equal(null, err);
+    	db.collection('bookings').find().toArray((err, docs) => {
+    		assert.equal(null, err);
+    		response.send(docs);
+    	});
 
-  MongoClient.connect(mongourl, function(err, db) {
-    assert.equal(null, err);
-    db.collection('bookings').find().toArray(function(err, docs) {
-      assert.equal(null, err);
-      console.log(docs);
-      response.send(docs);
-    });
-    db.close();
-  });
+    	db.close();
+  	});
 });
 
 app.post('/book', (request, response) => {
-  //bookings.push(request.body);
+  	MongoClient.connect(mongourl, (err, db) => {
+    	assert.equal(null, err);
+    	db.collection('bookings').insertOne(request.body, (err, r) => {
+      		assert.equal(null, err);
+      		assert.equal(1, r.insertedCount);
+			response.send('success');
+    	});
 
-  MongoClient.connect(mongourl, function(err, db) {
-    assert.equal(null, err);
-    db.collection('bookings').insertOne(request.body,function(err, r) {
-      assert.equal(null, err);
-      assert.equal(1, r.insertedCount);
-    });
-    db.close();
-  });
-
-  response.send({
-    this: 'happends'
-  });
+    	db.close();
+  	});
 });
 
-const port = 3000;
 
-app.listen(port, () => {
-  console.log(`Running Express on port ${port}...`);
+app.listen(PORT, () => {
+  console.log(`Running Express on port ${PORT}...`);
 });
