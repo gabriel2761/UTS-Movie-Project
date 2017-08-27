@@ -112,6 +112,20 @@ class BookingPage extends React.Component {
 	this.setState({ loggedIn: true });
   }
 
+  _deleteBooking(id) {
+	axios.post('/delete_booking', {
+	  bookingId: id
+	})
+
+	.then((response) => {
+	  this._updateBookings();
+	})
+
+	.catch((error) => {
+	  console.log(error);
+	});
+  }
+
   componentDidMount() {
 	this._updateBookings();
   }
@@ -122,7 +136,7 @@ class BookingPage extends React.Component {
 		<div>
 		  <BookingForm updateBookings={this._updateBookings.bind(this)} />
 		  <ul>
-			{this.state.bookings.map((booking, key) => <li key={key}>{booking.date} - {booking.time}</li>)}
+			{this.state.bookings.map((booking, key) => <li key={key}>{booking.date} - {booking.time} <button onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button></li>)}
 		  </ul>
 		</div>
 	  );

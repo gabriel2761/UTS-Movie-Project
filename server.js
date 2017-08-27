@@ -2,7 +2,8 @@ const util = require('util');
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const MongoClient = require('mongodb').MongoClient;
+const mongodb = require('mongodb');
+const mongoClient = mongodb.MongoClient;
 const assert = require('assert');
 const mongourl = 'mongodb://localhost:27017/bookingSystem';
 const app = express();
@@ -16,7 +17,7 @@ app.use(expressValidator()); // this line must be immediately after any of the b
 
 
 // Creates the admin account if not already created
-MongoClient.connect(mongourl, (err, db) => {
+mongoClient.connect(mongourl, (err, db) => {
 	assert.equal(null, err);
 
 	db.collection('users').insertOne(
@@ -31,7 +32,7 @@ app.post('/login', (request, response) => {
 	let username = request.body.username;
 	let password = request.body.password;
 
-	MongoClient.connect(mongourl, (err, db) => {
+	mongoClient.connect(mongourl, (err, db) => {
 		assert.equal(null, err);
 
 		db.collection('users').findOne({
@@ -55,11 +56,11 @@ app.post('/login', (request, response) => {
 });
 
 app.get('/bookings', (request, response) => {
-	MongoClient.connect(mongourl,(err, db) => {
+	mongoClient.connect(mongourl,(err, db) => {
     	assert.equal(null, err);
-    	db.collection('bookings').find().toArray((err, docs) => {
+    	db.collection('bookings').find().toArray((err, bookings) => {
     		assert.equal(null, err);
-    		response.send(docs);
+    		response.send(bookings);
     	});
 
     	db.close();
@@ -67,7 +68,7 @@ app.get('/bookings', (request, response) => {
 });
 
 app.post('/book', (request, response) => {
-  	MongoClient.connect(mongourl, (err, db) => {
+  	mongoClient.connect(mongourl, (err, db) => {
     	assert.equal(null, err);
     	db.collection('bookings').insertOne(request.body, (err, r) => {
       		assert.equal(null, err);
@@ -79,6 +80,20 @@ app.post('/book', (request, response) => {
   	});
 });
 
+app.post('/delete_booking', (request, response) => {
+	let bookingId = request.body.bookingId;
+
+  	mongoClient.connect(mongourl, (err, db) => {
+    	assert.equal(null, err);
+
+		db.collection('bookings').deleteOne({
+			_id: new mongodb.ObjectID(bookingId)
+		}, (err, result) => {
+			response.send('deleted');
+			db.close();
+		});
+  	});
+});
 
 app.listen(PORT, () => {
   console.log(`Running Express on port ${PORT}...`);
