@@ -25,7 +25,8 @@ class BookingForm extends React.Component {
 
 	axios.post('/book', {
 	  date: this.date.value,
-	  time: this.time.value
+	  time: this.time.value,
+	  approved: 'false',
 	})
 
 	.then((response) => {
@@ -126,6 +127,35 @@ class BookingPage extends React.Component {
 	});
   }
 
+  _approveBooking(id) {
+  	axios.put('/approve_booking', {
+	  bookingId: id
+	})
+
+	.then((response) => {
+	  this._updateBookings();
+	})
+
+	.catch((error) => {
+	  console.log(error);
+	});
+  }
+
+  _unapproveBooking(id) {
+   	axios.put('/unapprove_booking', {
+	  bookingId: id
+	})
+
+	.then((response) => {
+	  this._updateBookings();
+	})
+
+	.catch((error) => {
+	  console.log(error);
+	});
+  }
+
+
   componentDidMount() {
 	this._updateBookings();
   }
@@ -136,12 +166,20 @@ class BookingPage extends React.Component {
 		<div>
 		  <BookingForm updateBookings={this._updateBookings.bind(this)} />
 		  <ul>
-			{this.state.bookings.map((booking, key) => <li key={key}>{booking.date} - {booking.time} <button onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button></li>)}
+			{this.state.bookings.map((booking, key) => 
+				<li key={key}>
+					{booking.date} - {booking.time} -
+					Approved: {booking.approved} 
+					<button onClick={this._approveBooking.bind(this, booking._id)}>Approve</button>
+					<button onClick={this._unapproveBooking.bind(this, booking._id)}>Un-approve</button>
+					<button onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button>
+				</li>
+			)}
 		  </ul>
 		</div>
 	  );
 	} else {
-	  return(
+	  return (
 		<LoginPage authenticateUser={this._setLoggedIn.bind(this)} />
 	  );
 	}

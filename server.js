@@ -95,6 +95,38 @@ app.post('/delete_booking', (request, response) => {
   	});
 });
 
+app.put('/approve_booking', (request, response) => {
+	let bookingId = request.body.bookingId;
+	mongoClient.connect(mongourl, (err, db) => {
+    	assert.equal(null, err);
+
+		db.collection('bookings').update({
+			_id: new mongodb.ObjectID(bookingId)
+		}, {
+			$set: {approved: 'true'}	
+		}, (err, result) => {
+			response.send('approved');
+			db.close();
+		});
+  	});
+});
+
+app.put('/unapprove_booking', (request, response) => {
+	let bookingId = request.body.bookingId;
+	mongoClient.connect(mongourl, (err, db) => {
+    	assert.equal(null, err);
+
+		db.collection('bookings').update({
+			_id: new mongodb.ObjectID(bookingId)
+		}, {
+			$set: {approved: 'false'}	
+		}, (err, result) => {
+			response.send('approved');
+			db.close();
+		});
+  	});
+});
+
 app.listen(PORT, () => {
   console.log(`Running Express on port ${PORT}...`);
 });
