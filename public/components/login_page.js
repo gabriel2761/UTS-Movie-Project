@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Login form that contains two inputs for the username and password
  * This submits data to the express router which enables the user
@@ -39,3 +40,5 @@ class LoginPage extends React.Component {
 	);
   }
 }
+
+export default LoginPage;

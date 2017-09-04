@@ -1,3 +1,7 @@
+import React from 'react';
+import BookingForm from './booking_form.js';
+import LoginPage from './login_page.js';
+
 /**
  * Main Parent component which contains the other components
  * Contains a logged in state which shows the booking page or
@@ -102,3 +106,5 @@ class BookingPage extends React.Component {
 	}
   }
 }
+
+export default BookingPage;

@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * React component for the booking form to submit data.
  * Contains 2 inputs for Date and Time that submits a
@@ -38,3 +39,5 @@ class BookingForm extends React.Component {
 	});
   }
 }
+
+export default BookingForm;
