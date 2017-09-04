@@ -1,3 +1,14 @@
+## How to Run
+
+Please run these commands before running.
+`yarn install`
+`webpack`
+
+To start the server run:
+`yarn start`
+
+The server will be running on port 3000.
+
 ## Coding Standards
 
 1. Tabs not spaces
