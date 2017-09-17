@@ -6,14 +6,19 @@ const mongodb = require('mongodb');
 const mongoClient = mongodb.MongoClient;
 const assert = require('assert');
 const mongourl = 'mongodb://localhost:27017/bookingSystem';
+const helmet = require('helmet');
 const app = express();
 
 const PORT = 3000;
 var isAdmin = false;
 
 app.use(express.static('public'));
+app.use(helmet())
 app.use(express.bodyParser());
 app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
+
+
+app.use(helmet.frameguard({ action: 'sameorigin' }));
 
 
 // Creates the admin account if not already created
