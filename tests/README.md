@@ -5,7 +5,7 @@
 
 ```js
 app.use(helmet.frameguard({ action: 'sameorigin' }));
-`
+```
 
 2. Restart the server, make sure it's running on port 3000.
 
