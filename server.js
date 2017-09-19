@@ -8,32 +8,44 @@ const assert = require('assert');
 const mongourl = 'mongodb://localhost:27017/bookingSystem';
 const helmet = require('helmet');
 const app = express();
+const mongoose = require('mongoose');
+const passport = require('passport');
+
+var configDB = require('./config/database.js');
+var User = require('./models/user');
 
 const PORT = 3000;
 var isAdmin = false;
 
 app.use(express.static('public'));
 app.use(helmet())
-app.use(express.bodyParser());
+app.use(bodyParser());
 app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
-
+app.use(passport.initialize());
 
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 
+mongoose.connect(configDB.url);
+require('./config/passport')(passport);
+
+
 
 // Creates the admin account if not already created
-mongoClient.connect(mongourl, (err, db) => {
-	assert.equal(null, err);
+User.findOne({'local.username': 'admin'}, (err, user) => {
+  if (!user) {
+    var adminUser = new User()
+    adminUser.local.username = 'admin';
+    adminUser.local.password = adminUser.generateHash('password');
+    adminUser.local.admin = true;
+    adminUser.save(function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+}); 
 
-	db.collection('users').insertOne(
-		{ username: 'admin', password: 'password', admin: true },
-		{ upsert: true }
-	);
-
-	db.close();
-});
-
-app.post('/login', (request, response) => {
+/*app.post('/login', (request, response) => {
 	let username = request.body.username;
 	let password = request.body.password;
 
@@ -58,6 +70,33 @@ app.post('/login', (request, response) => {
 			db.close();
 		});
 	});
+});*/
+
+app.post('/login', (request, response, next) => {
+  passport.authenticate('local-login', (err, user, info) => {
+    if (err) {
+      return response.send(err);
+    }
+    if (!user) {
+      return response.send(info);
+    }
+    return response.send({success: true, message: 'login success'});
+  })(request, response, next);
+});
+
+app.post('/signup', (request, response, next) => {
+  passport.authenticate('local-signup', (err, user, info) => {
+    console.log(err);
+    console.log(user);
+    console.log(info);
+    if (err) {
+      return response.send(err);
+    }
+    if (!user) {
+      return response.send(info);
+    }
+    return response.send({success: true, message: 'signup success'});
+  })(request, response, next);
 });
 
 app.get('/bookings', (request, response) => {

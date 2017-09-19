@@ -22661,7 +22661,7 @@ exports.default = BookingForm;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22685,59 +22685,131 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * component to logged in.
  */
 var LoginPage = function (_React$Component) {
-	_inherits(LoginPage, _React$Component);
+  _inherits(LoginPage, _React$Component);
 
-	function LoginPage() {
-		_classCallCheck(this, LoginPage);
+  function LoginPage() {
+    _classCallCheck(this, LoginPage);
 
-		return _possibleConstructorReturn(this, (LoginPage.__proto__ || Object.getPrototypeOf(LoginPage)).apply(this, arguments));
-	}
+    var _this = _possibleConstructorReturn(this, (LoginPage.__proto__ || Object.getPrototypeOf(LoginPage)).call(this));
 
-	_createClass(LoginPage, [{
-		key: '_login',
-		value: function _login(event) {
-			var self = this;
-			event.preventDefault();
+    _this.state = {
+      signUp: false
+    };
+    return _this;
+  }
 
-			axios.post('/login', {
-				username: this.username.value,
-				password: this.password.value
-			}).then(function (response) {
-				if (response.data) {
-					self.props.authenticateUser();
-				} else {
-					alert('Incorrect username or password');
-				}
-			}).catch(function (error) {
-				console.log(error);
-			});
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _this2 = this;
+  _createClass(LoginPage, [{
+    key: '_login',
+    value: function _login(event) {
+      var self = this;
+      event.preventDefault();
 
-			return _react2.default.createElement(
-				'form',
-				{ onSubmit: this._login.bind(this) },
-				_react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: function ref(username) {
-						return _this2.username = username;
-					} }),
-				_react2.default.createElement('br', null),
-				_react2.default.createElement('input', { type: 'password', placeholder: 'Password', ref: function ref(password) {
-						return _this2.password = password;
-					} }),
-				_react2.default.createElement('br', null),
-				_react2.default.createElement(
-					'button',
-					{ type: 'submit' },
-					'Login'
-				)
-			);
-		}
-	}]);
+      axios.post('/login', {
+        username: this.username.value,
+        password: this.password.value
+      }).then(function (response) {
+        if (response.data.success) {
+          self.props.authenticateUser();
+        } else {
+          alert(response.data.message);
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: '_signUp',
+    value: function _signUp(event) {
+      var self = this;
+      event.preventDefault();
 
-	return LoginPage;
+      axios.post('/signup', {
+        username: this.username.value,
+        password: this.password.value
+      }).then(function (response) {
+        if (response.data.success) {
+          self.props.authenticateUser();
+        } else {
+          alert(response.data.message);
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: '_showSignup',
+    value: function _showSignup() {
+      this.setState({ signUp: true });
+    }
+  }, {
+    key: '_showLogin',
+    value: function _showLogin() {
+      this.setState({ signUp: false });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      if (this.state.signUp) {
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'form',
+            { onSubmit: this._signUp.bind(this) },
+            _react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: function ref(username) {
+                return _this2.username = username;
+              } }),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement('input', { type: 'text', placeholder: 'Password', ref: function ref(password) {
+                return _this2.password = password;
+              } }),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement(
+              'button',
+              { type: 'submit' },
+              'Signup'
+            )
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this._showLogin.bind(this) },
+            "Already have an account? Login Here!"
+          )
+        );
+      } else {
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'form',
+            { onSubmit: this._login.bind(this) },
+            _react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: function ref(username) {
+                return _this2.username = username;
+              } }),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement('input', { type: 'text', placeholder: 'Password', ref: function ref(password) {
+                return _this2.password = password;
+              } }),
+            _react2.default.createElement('br', null),
+            _react2.default.createElement(
+              'button',
+              { type: 'submit' },
+              'Login'
+            )
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this._showSignup.bind(this) },
+            "Don't have an account yet? Sign Up Here!"
+          )
+        );
+      }
+    }
+  }]);
+
+  return LoginPage;
 }(_react2.default.Component);
 
 exports.default = LoginPage;
