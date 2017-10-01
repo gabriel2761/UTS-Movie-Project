@@ -1,6 +1,5 @@
 import React from 'react';
 import BookingForm from './booking_form.js';
-import LoginPage from './login_page.js';
 
 /**
  * Main Parent component which contains the other components
@@ -101,7 +100,7 @@ class BookingPage extends React.Component {
 	  );
 	} else {
 	  return (
-		<LoginPage authenticateUser={this._setLoggedIn.bind(this)} />
+		<p>Not logged in</p>
 	  );
 	}
   }
