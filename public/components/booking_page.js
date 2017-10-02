@@ -38,6 +38,8 @@ class BookingPage extends React.Component {
   _deleteBooking(id) {
 	axios.post('/delete_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -52,6 +54,8 @@ class BookingPage extends React.Component {
   _approveBooking(id) {
   	axios.put('/approve_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -66,6 +70,8 @@ class BookingPage extends React.Component {
   _unapproveBooking(id) {
    	axios.put('/unapprove_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -83,7 +89,6 @@ class BookingPage extends React.Component {
   }
 
   render() {
-	if (this.state.loggedIn) {
 	  return (
 		<div>
 		  <BookingForm updateBookings={this._updateBookings.bind(this)} />
@@ -100,11 +105,6 @@ class BookingPage extends React.Component {
 		  </ul>
 		</div>
 	  );
-	} else {
-	  return (
-		<p>Not logged in</p>
-	  );
-	}
   }
 }
 

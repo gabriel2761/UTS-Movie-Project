@@ -26,7 +26,7 @@ app.use(passport.initialize());
 
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 
-app.use(jwt({ secret: 'secret', requestProperty: 'token'}).unless({path: ['/login', '/signup']}));
+app.use(jwt({ secret: 'secret'}).unless({path: ['/login', '/signup']}));
 
 mongoose.connect(configDB.url);
 require('./config/passport')(passport);
