@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 /**
  * Login form that contains two inputs for the username and password
@@ -10,7 +10,9 @@ import {Link} from 'react-router-dom';
 class LoginPage extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+	  loggedIn: false
+	};
   }
 
   _login(event) {
@@ -25,6 +27,7 @@ class LoginPage extends React.Component {
 	.then((response) => {
 	  if (response.data.success) {
 		localStorage.setItem('token', response.data.token);
+		this.setState({ loggedIn: true });
 	  } else {
 		alert(response.data.message);
 	  }
@@ -36,6 +39,10 @@ class LoginPage extends React.Component {
   }
 
   render() {
+	if (this.state.loggedIn) {
+	  return (<Redirect to="/"/>);
+	}
+
 	return (
 	  <div>
 		<form onSubmit={this._login.bind(this)}>
@@ -46,7 +53,7 @@ class LoginPage extends React.Component {
 		  <button type="submit">Login</button>
 		</form>
 
-		<Link to="/Register">Don't have an account yet? Sign Up Here!</Link>
+		<Link to="/register">Don't have an account yet? Sign Up Here!</Link>
 	  </div>
 	 );
   }

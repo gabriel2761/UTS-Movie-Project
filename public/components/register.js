@@ -40,7 +40,7 @@ class RegisterPage extends React.Component {
 		  <button type="submit">Signup</button>
 		</form>
 
-		<Link to="/Login">Already have an account? Login Here!</Link>
+		<Link to="/login">Already have an account? Login Here!</Link>
 	  </div>
 	);
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import BookingPage from './booking_page.js';
 import LoginPage from './login.js';
 import RegisterPage from './register.js';
+import Logout from './logout.js';
 import {HashRouter as Router, Route, Redirect} from 'react-router-dom';
 
 /**
@@ -11,9 +12,11 @@ import {HashRouter as Router, Route, Redirect} from 'react-router-dom';
 ReactDOM.render(
   <Router>
 	<switch>
-	  <Route path="/home" component={BookingPage}/>
+	  <Route exact path="/" component={BookingPage}/>
 	  <Route path="/login" component={LoginPage}/>
 	  <Route path="/signup" component={RegisterPage}/>
+	  <Route path="/signup" component={RegisterPage}/>
+	  <Route path="/logout" component={Logout}/>
 	</switch>
   </Router>,
   document.getElementById('root')
