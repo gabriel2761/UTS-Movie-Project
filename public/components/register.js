@@ -18,7 +18,7 @@ class RegisterPage extends React.Component {
 
     .then((response) => {
       if (response.data.success) {
-        self.props.authenticateUser();
+
       } else {
         alert(response.data.message);
       }

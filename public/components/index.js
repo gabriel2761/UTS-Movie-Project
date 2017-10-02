@@ -13,7 +13,7 @@ ReactDOM.render(
 	<switch>
 	  <Route path="/home" component={BookingPage}/>
 	  <Route path="/login" component={LoginPage}/>
-	  <Route path="/Register" component={RegisterPage}/>
+	  <Route path="/signup" component={RegisterPage}/>
 	</switch>
   </Router>,
   document.getElementById('root')

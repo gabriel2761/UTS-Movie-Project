@@ -24,7 +24,7 @@ class LoginPage extends React.Component {
 
 	.then((response) => {
 	  if (response.data.success) {
-		self.props.authenticateUser();
+		localStorage.setItem('token', response.data.token);
 	  } else {
 		alert(response.data.message);
 	  }

@@ -17,7 +17,9 @@ class BookingPage extends React.Component {
   }
 
   _updateBookings() {
-	axios.get('/bookings')
+	axios.get('/bookings', {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) }
+	})
 	.then((response) => {
 	  this.setState({
 		bookings: response.data
