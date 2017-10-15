@@ -28,8 +28,9 @@ class BookingForm extends React.Component {
 	  date: this.date.value,
 	  time: this.time.value,
 	  approved: 'false',
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
-
 	.then((response) => {
 	  self.props.updateBookings();
 	})

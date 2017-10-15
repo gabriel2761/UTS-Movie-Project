@@ -1,6 +1,6 @@
 import React from 'react';
 import BookingForm from './booking_form.js';
-import LoginPage from './login_page.js';
+import {Link} from 'react-router-dom';
 
 /**
  * Main Parent component which contains the other components
@@ -18,7 +18,9 @@ class BookingPage extends React.Component {
   }
 
   _updateBookings() {
-	axios.get('/bookings')
+	axios.get('/bookings', {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) }
+	})
 	.then((response) => {
 	  this.setState({
 		bookings: response.data
@@ -37,6 +39,8 @@ class BookingPage extends React.Component {
   _deleteBooking(id) {
 	axios.post('/delete_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -51,6 +55,8 @@ class BookingPage extends React.Component {
   _approveBooking(id) {
   	axios.put('/approve_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -65,6 +71,8 @@ class BookingPage extends React.Component {
   _unapproveBooking(id) {
    	axios.put('/unapprove_booking', {
 	  bookingId: id
+	}, {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
 
 	.then((response) => {
@@ -82,28 +90,24 @@ class BookingPage extends React.Component {
   }
 
   render() {
-	if (this.state.loggedIn) {
-	  return (
-		<div>
-		  <BookingForm updateBookings={this._updateBookings.bind(this)} />
-		  <ul>
-			{this.state.bookings.map((booking, key) =>
-				<li key={key}>
-					{booking.date} - {booking.time} -
-					Approved: {booking.approved}
-					<button onClick={this._approveBooking.bind(this, booking._id)}>Approve</button>
-					<button onClick={this._unapproveBooking.bind(this, booking._id)}>Un-approve</button>
-					<button onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button>
-				</li>
-			)}
-		  </ul>
-		</div>
-	  );
-	} else {
-	  return (
-		<LoginPage authenticateUser={this._setLoggedIn.bind(this)} />
-	  );
-	}
+	return (
+	  <div>
+		<Link to="/logout">Logout</Link>
+
+		<BookingForm updateBookings={this._updateBookings.bind(this)} />
+		<ul>
+		  {this.state.bookings.map((booking, key) =>
+			  <li key={key}>
+				  {booking.date} - {booking.time} -
+				  Approved: {booking.approved}
+				  <button onClick={this._approveBooking.bind(this, booking._id)}>Approve</button>
+				  <button onClick={this._unapproveBooking.bind(this, booking._id)}>Un-approve</button>
+				  <button onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button>
+			  </li>
+		  )}
+		</ul>
+	  </div>
+	);
   }
 }
 

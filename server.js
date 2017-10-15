@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const app = express();
 const mongoose = require('mongoose');
 const passport = require('passport');
+const jwt = require('express-jwt');
 
 var configDB = require('./config/database.js');
 var User = require('./models/user');
@@ -25,10 +26,10 @@ app.use(passport.initialize());
 
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 
+app.use(jwt({ secret: 'secret'}).unless({path: ['/login', '/signup']}));
+
 mongoose.connect(configDB.url);
 require('./config/passport')(passport);
-
-
 
 // Creates the admin account if not already created
 User.findOne({'local.username': 'admin'}, (err, user) => {
@@ -43,34 +44,7 @@ User.findOne({'local.username': 'admin'}, (err, user) => {
       }
     });
   }
-}); 
-
-/*app.post('/login', (request, response) => {
-	let username = request.body.username;
-	let password = request.body.password;
-
-	mongoClient.connect(mongourl, (err, db) => {
-		assert.equal(null, err);
-
-		db.collection('users').findOne({
-			username: username,
-			password: password
-		}, (err, result) => {
-			if (!result) {
-				response.send(false);
-				db.close();
-				return;
-			}
-
-			if (result.admin) {
-				isAdmin = true;
-			}
-
-			response.send(true);
-			db.close();
-		});
-	});
-});*/
+});
 
 app.post('/login', (request, response, next) => {
   passport.authenticate('local-login', (err, user, info) => {
@@ -80,7 +54,7 @@ app.post('/login', (request, response, next) => {
     if (!user) {
       return response.send(info);
     }
-    return response.send({success: true, message: 'login success'});
+    return response.send({success: true, token: user.token});
   })(request, response, next);
 });
 
@@ -147,7 +121,7 @@ app.put('/approve_booking', (request, response) => {
 		db.collection('bookings').update({
 			_id: new mongodb.ObjectID(bookingId)
 		}, {
-			$set: {approved: 'true'}	
+			$set: {approved: 'true'}
 		}, (err, result) => {
 			response.send('approved');
 			db.close();
@@ -163,7 +137,7 @@ app.put('/unapprove_booking', (request, response) => {
 		db.collection('bookings').update({
 			_id: new mongodb.ObjectID(bookingId)
 		}, {
-			$set: {approved: 'false'}	
+			$set: {approved: 'false'}
 		}, (err, result) => {
 			response.send('approved');
 			db.close();
