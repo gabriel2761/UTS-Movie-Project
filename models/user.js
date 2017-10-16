@@ -6,6 +6,8 @@ var userSchema = mongoose.Schema({
     username: String,
     password: String,
     admin: Boolean,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
   },
   google: {
     id: String,
