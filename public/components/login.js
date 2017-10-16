@@ -49,15 +49,21 @@ class LoginPage extends React.Component {
 
 	return (
 	  <div>
-		<form onSubmit={this._login.bind(this)}>
-		  <input type="text" placeholder="Username" ref={username => this.username = username} />
-		  <br />
-		  <input type="text" placeholder="Password" ref={password => this.password = password} />
-		  <br />
-		  <button type="submit">Login</button>
-		</form>
-
-		<Link to="/signup">Don't have an account yet? Sign Up Here!</Link>
+		<div className="w3-container w3-indigo">
+			<h1>Patient Booking System</h1>
+		</div>
+                <div className="w3-card-4 w3-margin">
+		  <div className="w3-container w3-dark-grey">
+		    <h3>Login</h3>
+		  </div>
+		  <form className="w3-container" onSubmit={this._login.bind(this)}>
+		    <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Email" ref={username => this.username = username} /></p>
+		    <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Password" ref={password => this.password = password} /></p>
+		    <p><button className="w3-button w3-teal" type="submit">Login</button></p>
+		  </form>
+		</div>
+		<p><Link to="/signup">Don't have an account yet? Sign Up Here!</Link></p>
+		<p><Link to="/forgotPassword">Forgot Password?</Link></p>
 	  </div>
 	 );
   }

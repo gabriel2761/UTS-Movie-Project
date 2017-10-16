@@ -94,7 +94,9 @@ class BookingPage extends React.Component {
   }
 
   componentDidMount() {
-	this._updateBookings();
+	if (this.state.loggedIn) {
+		this._updateBookings();
+	}
   }
 
   render() {
