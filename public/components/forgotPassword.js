@@ -3,35 +3,32 @@ import {Link, Redirect} from 'react-router-dom';
 import axios from 'axios';
 
 /**
- * Login form that contains two inputs for the username and password
- * This submits data to the express router which enables the user
- * to log in. If successful, it switches changes the state of parent
- * component to logged in.
+ * Form to request password reset. Takes the email provided
+ * by the user and then sends it to backend which
+ * will generate a reset token and email it to user
+ * with link.
  */
-class LoginPage extends React.Component {
+class ForgotPassword extends React.Component {
   constructor() {
     super();
     this.state = {
-	  loggedIn: false
+	  loggedIn: false,
+	  msg: ""
 	};
   }
 
-  _login(event) {
+  _requestReset(event) {
 	var self = this;
 	event.preventDefault();
 
-	axios.post('/login', {
+	axios.post('/requestReset', {
 	  username: this.username.value,
-	  password: this.password.value
 	})
 
 	.then((response) => {
-	  if (response.data.success) {
-		localStorage.setItem('token', response.data.token);
-		this.setState({ loggedIn: true });
-	  } else {
-		alert(response.data.message);
-	  }
+	  this.setState({
+	    msg: response.data
+	  });
 	})
 
 	.catch((error) => {
@@ -54,19 +51,20 @@ class LoginPage extends React.Component {
 		</div>
                 <div className="w3-card-4 w3-margin">
 		  <div className="w3-container w3-dark-grey">
-		    <h3>Login</h3>
+		    <h3>Request Password Reset</h3>
+		    <h6>Please enter your email:</h6>
 		  </div>
-		  <form className="w3-container" onSubmit={this._login.bind(this)}>
+		  <form className="w3-container" onSubmit={this._requestReset.bind(this)}>
 		    <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Email" ref={username => this.username = username} /></p>
-		    <p><input className="w3-input w3-border w3-sand" type="password" placeholder="Password" ref={password => this.password = password} /></p>
-		    <p><button className="w3-button w3-teal" type="submit">Login</button></p>
+		    <p><button className="w3-button w3-teal" type="submit">Request Reset Email</button></p>
+		    <p className="alert-msg">{this.state.msg}</p>
 		  </form>
 		</div>
+		<p><Link to="/login">Remember your password? Login here!</Link></p>
 		<p><Link to="/signup">Don't have an account yet? Sign Up Here!</Link></p>
-		<p><Link to="/forgotPassword">Forgot Password?</Link></p>
 	  </div>
 	 );
   }
 }
 
-export default LoginPage;
+export default ForgotPassword;
