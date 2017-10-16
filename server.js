@@ -16,7 +16,7 @@ var configDB = require('./config/database');
 var User = require('./models/user');
 var sendReset = require('./backend/sendReset');
 
-const PORT = 80;
+const PORT = 3000;
 var isAdmin = false;
 
 app.use(express.static('public'));
