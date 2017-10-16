@@ -50,7 +50,7 @@ class RegisterPage extends React.Component {
 		  </div>
 		  <form className="w3-container" onSubmit={this._signUp.bind(this)}>
 		    <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Email" ref={username => this.username = username} /></p>
-		    <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Password" ref={password => this.password = password} /></p>
+		    <p><input className="w3-input w3-border w3-sand" type="password" placeholder="Password" ref={password => this.password = password} /></p>
 		    <p><button className="w3-button w3-teal" type="submit">Signup</button></p>
 		  </form>
 		</div>

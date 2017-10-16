@@ -12,10 +12,11 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const jwt = require('express-jwt');
 
-var configDB = require('./config/database.js');
+var configDB = require('./config/database');
 var User = require('./models/user');
+var sendReset = require('./backend/sendReset');
 
-const PORT = 3000;
+const PORT = 80;
 var isAdmin = false;
 
 app.use(express.static('public'));
@@ -26,9 +27,11 @@ app.use(passport.initialize());
 
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 
-app.use(jwt({ secret: 'secret'}).unless({path: ['/login', '/signup']}));
+app.use(jwt({ secret: 'secret'}).unless({path: ['/login', '/signup','/requestReset', '/checkResetToken', '/resetPassword']}));
 
-mongoose.connect(configDB.url);
+mongoose.connect(configDB.url, {
+  useMongoClient: true,
+});
 require('./config/passport')(passport);
 
 // Creates the admin account if not already created
@@ -144,6 +147,25 @@ app.put('/unapprove_booking', (request, response) => {
 		});
   	});
 });
+
+app.post('/requestReset', (request, response) => {
+	sendReset.resetEmail(request.body.username, (data) => {
+		response.send(data);
+	});
+});
+
+app.post('/checkResetToken', (request, response) => {
+	sendReset.checkToken(request.body.token, (data) => {
+		response.send(data);
+	});
+});
+
+app.post('/resetPassword', (request, response) => {
+	sendReset.resetPassword(request.body.token, request.body.password, (data) => {
+		response.send(data);
+	});
+});
+
 
 app.listen(PORT, () => {
   console.log(`Running Express on port ${PORT}...`);
