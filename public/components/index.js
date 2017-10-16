@@ -15,7 +15,6 @@ ReactDOM.render(
 	  <Route exact path="/" component={BookingPage}/>
 	  <Route path="/login" component={LoginPage}/>
 	  <Route path="/signup" component={RegisterPage}/>
-	  <Route path="/signup" component={RegisterPage}/>
 	  <Route path="/logout" component={Logout}/>
 	</switch>
   </Router>,

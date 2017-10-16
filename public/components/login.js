@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link, Redirect} from 'react-router-dom';
+import axios from 'axios';
 
 /**
  * Login form that contains two inputs for the username and password
@@ -40,7 +41,10 @@ class LoginPage extends React.Component {
 
   render() {
 	if (this.state.loggedIn) {
-	  return (<Redirect to="/"/>);
+	  return (<Redirect to={{
+	    pathname: '/',
+	    state: {loggedIn: true}
+	  }}/>);
 	}
 
 	return (
@@ -53,7 +57,7 @@ class LoginPage extends React.Component {
 		  <button type="submit">Login</button>
 		</form>
 
-		<Link to="/register">Don't have an account yet? Sign Up Here!</Link>
+		<Link to="/signup">Don't have an account yet? Sign Up Here!</Link>
 	  </div>
 	 );
   }

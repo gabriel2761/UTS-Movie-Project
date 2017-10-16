@@ -5,6 +5,7 @@
     "build": "./node_modules/.bin/webpack --config ./config/webpack.config.js"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "browser-sync": "^2.18.13",

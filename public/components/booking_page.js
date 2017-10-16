@@ -1,6 +1,7 @@
 import React from 'react';
 import BookingForm from './booking_form.js';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
+import axios from 'axios';
 
 /**
  * Main Parent component which contains the other components
@@ -84,12 +85,22 @@ class BookingPage extends React.Component {
 	});
   }
 
+  componentWillMount() {
+    if (this.props.location.state !== undefined) {
+      this.setState({
+        loggedIn: this.props.location.state.loggedIn
+      });
+    }
+  }
 
   componentDidMount() {
 	this._updateBookings();
   }
 
   render() {
+	if (!this.state.loggedIn) {
+	  return (<Redirect to="/login" />);
+	}
 	return (
 	  <div>
 		<Link to="/logout">Logout</Link>
