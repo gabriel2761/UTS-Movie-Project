@@ -29,3 +29,63 @@ exports[`Creating a booking renders correctly Renders correctly 1`] = `
   </a>
 </div>
 `;
+
+exports[`Login Page renders correctly Renders correctly 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <input
+      placeholder="Username"
+      type="text"
+    />
+    <br />
+    <input
+      placeholder="Password"
+      type="text"
+    />
+    <br />
+    <button
+      type="submit"
+    >
+      Login
+    </button>
+  </form>
+  <a
+    href="#/register"
+    onClick={[Function]}
+  >
+    Don't have an account yet? Sign Up Here!
+  </a>
+</div>
+`;
+
+exports[`Register Page renders correctly Renders correctly 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <input
+      placeholder="Username"
+      type="text"
+    />
+    <br />
+    <input
+      placeholder="Password"
+      type="text"
+    />
+    <br />
+    <button
+      type="submit"
+    >
+      Signup
+    </button>
+  </form>
+  <a
+    href="#/login"
+    onClick={[Function]}
+  >
+    Already have an account? Login Here!
+  </a>
+</div>
+`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, Router, HashRouter} from 'react-router-dom';
 
 /**
  * Login form that contains two inputs for the username and password
