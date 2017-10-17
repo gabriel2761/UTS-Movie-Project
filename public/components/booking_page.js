@@ -1,6 +1,7 @@
 import React from 'react';
 import BookingForm from './booking_form.js';
 import AdminBookingForm from './admin_booking_form.js';
+import Weather from './weather.js';
 import {Link, Redirect} from 'react-router-dom';
 import axios from 'axios';
 
@@ -230,7 +231,7 @@ class BookingPage extends React.Component {
 	        </table>
 	        <p className="alert-msg">{this.state.bookingsMsg}</p>
 	      </div>
-	  
+	      <Weather />
 	    </div>
 	  )	
 	} else {
@@ -268,6 +269,7 @@ class BookingPage extends React.Component {
 	        </table>
 	        <p className="alert-msg">{this.state.bookingsMsg}</p>
 	      </div>
+	      <Weather />
 	    </div>
 	  );
 	}

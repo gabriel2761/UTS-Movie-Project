@@ -16,6 +16,7 @@ var configDB = require('./config/database');
 var User = require('./models/user');
 var sendReset = require('./backend/sendReset');
 var bookingHandler = require('./backend/bookingHandler');
+var weather = require('./backend/weather');
 
 const PORT = 3000;
 var isAdmin = false;
@@ -176,6 +177,12 @@ app.post('/checkResetToken', (request, response) => {
 
 app.post('/resetPassword', (request, response) => {
 	sendReset.resetPassword(request.body.token, request.body.password, (data) => {
+		response.send(data);
+	});
+});
+
+app.get('/weather', (request, response) => {
+	weather.getWeather((data) => {
 		response.send(data);
 	});
 });

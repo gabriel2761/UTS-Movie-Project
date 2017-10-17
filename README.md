@@ -2,12 +2,29 @@
 
 Please run these commands before running.
 `yarn install`
-`webpack`
+`yarn build`
 
 To start the server run:
 `yarn start`
 
 The server will be running on port 3000.
+
+## Deploying
+
+To deploy git clone the repo. 
+Run the install.sh bash script, which will install everything needed to deploy it.
+It install and configures nginx to proxypass to the node server on port 3000.
+`sudo bash install.sh`
+
+Install and build bundle.js file:
+`yarn install`
+`yarn build`
+
+Then start the server using the forever process manager:
+`forever start server.js`
+
+To stop the node server:
+`forever stopall`
 
 ## Coding Standards
 
