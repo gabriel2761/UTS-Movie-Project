@@ -81,6 +81,7 @@ class ResetPassword extends React.Component {
 		    <p className="alert-msg">{this.state.msg}</p>
 		  </form>
 		</div>
+	        <p><Link to="/login">Back to Login page</Link></p>
 	  </div>
 	 );
   }
