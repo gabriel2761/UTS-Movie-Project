@@ -15,8 +15,10 @@ const jwt = require('express-jwt');
 var configDB = require('./config/database');
 var User = require('./models/user');
 var sendReset = require('./backend/sendReset');
+var bookingHandler = require('./backend/bookingHandler');
+var weather = require('./backend/weather');
 
-const PORT = 80;
+const PORT = 3000;
 var isAdmin = false;
 
 app.use(express.static('public'));
@@ -57,7 +59,13 @@ app.post('/login', (request, response, next) => {
     if (!user) {
       return response.send(info);
     }
-    return response.send({success: true, token: user.token});
+    console.log(user);
+    return response.send({
+	    success: true, 
+	    token: user.token, 
+	    admin: user.local.admin, 
+	    email: user.local.username
+    });
   })(request, response, next);
 });
 
@@ -77,28 +85,35 @@ app.post('/signup', (request, response, next) => {
 });
 
 app.get('/bookings', (request, response) => {
-	mongoClient.connect(mongourl,(err, db) => {
-    	assert.equal(null, err);
-    	db.collection('bookings').find().toArray((err, bookings) => {
-    		assert.equal(null, err);
-    		response.send(bookings);
-    	});
-
-    	db.close();
-  	});
+  	bookingHandler.getBookings(request.query.email, (data) => {
+		response.send(data);
+	});
 });
 
 app.post('/book', (request, response) => {
-  	mongoClient.connect(mongourl, (err, db) => {
-    	assert.equal(null, err);
-    	db.collection('bookings').insertOne(request.body, (err, r) => {
-      		assert.equal(null, err);
-      		assert.equal(1, r.insertedCount);
-			response.send('success');
-    	});
+	bookingHandler.makeBooking(request.body, (data) => {
+		response.send(data);
+	});
+});
 
-    	db.close();
-  	});
+app.post('/adminBook', (request, response) => {
+	bookingHandler.adminMakeBooking(request.body, (data) => {
+		response.send(data);
+	});
+});
+
+
+app.put('/cancelBooking', (request, response) => {
+	bookingHandler.cancelBooking(request.body.email, request.body.id, (data) => {
+		response.send(data);
+	})
+});
+
+app.get('/adminBookings', (request, response) => {
+	console.log(request.params.email);
+  	bookingHandler.adminGetBookings(request.params.email, (data) => {
+		response.send(data);
+	});
 });
 
 app.post('/delete_booking', (request, response) => {
@@ -162,6 +177,12 @@ app.post('/checkResetToken', (request, response) => {
 
 app.post('/resetPassword', (request, response) => {
 	sendReset.resetPassword(request.body.token, request.body.password, (data) => {
+		response.send(data);
+	});
+});
+
+app.get('/weather', (request, response) => {
+	weather.getWeather((data) => {
 		response.send(data);
 	});
 });

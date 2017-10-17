@@ -12,7 +12,9 @@ class LoginPage extends React.Component {
   constructor() {
     super();
     this.state = {
-	  loggedIn: false
+	  loggedIn: false,
+	  admin: false,
+	  email: false,
 	};
   }
 
@@ -26,9 +28,14 @@ class LoginPage extends React.Component {
 	})
 
 	.then((response) => {
+	  console.log(response);
 	  if (response.data.success) {
 		localStorage.setItem('token', response.data.token);
-		this.setState({ loggedIn: true });
+		this.setState({ 
+			loggedIn: true,
+			admin: response.data.admin,
+			email: response.data.email
+		});
 	  } else {
 		alert(response.data.message);
 	  }
@@ -43,7 +50,11 @@ class LoginPage extends React.Component {
 	if (this.state.loggedIn) {
 	  return (<Redirect to={{
 	    pathname: '/',
-	    state: {loggedIn: true}
+	    state: {
+	      loggedIn: true,
+	      admin: this.state.admin,
+	      email: this.state.email
+	    }
 	  }}/>);
 	}
 

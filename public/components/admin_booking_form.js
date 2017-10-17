@@ -7,7 +7,7 @@ import axios from 'axios';
  * booking to the server. This sends it to the express
  * router which is accessable with the /book url
  */
-class BookingForm extends React.Component {
+class AdminBookingForm extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -16,11 +16,11 @@ class BookingForm extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      email: this.props.getEmail(),
-    });
-  }
+ componentDidMount() {
+   this.setState({
+     email: this.props.getEmail(),
+   });
+ }
 
   render() {
 	return (
@@ -28,7 +28,8 @@ class BookingForm extends React.Component {
 		<div className="w3-container w3-dark-grey">
 		  <h3>Make a Booking:</h3>
 		</div>
-		<form className="w3-container" onSubmit={this._submitBooking.bind(this)}>
+		<form className="w3-container" onSubmit={this._adminSubmitBooking.bind(this)}>
+		  <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Email of User" ref={email => this.email = email} /></p>
 		  <p><input className="w3-input w3-border w3-sand" type="date" ref={date => this.date = date} /></p>
 		  <p><input className="w3-input w3-border w3-sand" type="time" ref={time => this.time = time} /></p>
 		  <p><button className="w3-button w3-teal" type="submit">Book</button></p>
@@ -38,15 +39,16 @@ class BookingForm extends React.Component {
 	);
   }
 
-  _submitBooking(event) {
+  _adminSubmitBooking(event) {
 	var self = this;
 	event.preventDefault();
 
-	axios.post('/book', {
+	axios.post('/adminBook', {
 	  date: this.date.value,
 	  time: this.time.value,
-	  approved: 'false',
-	  email: this.state.email,
+	  approved: 'true',
+	  email: this.email.value,
+	  adminEmail: this.state.email,
 	}, {
 	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
 	})
@@ -54,7 +56,7 @@ class BookingForm extends React.Component {
 	  this.setState({
 	    msg: response.data
 	  });
-	  self.props.updateBookings();
+	  self.props.adminUpdateBookings();
 	})
 
 	.catch((error) => {
@@ -63,4 +65,4 @@ class BookingForm extends React.Component {
   }
 }
 
-export default BookingForm;
+export default AdminBookingForm;
