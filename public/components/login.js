@@ -28,6 +28,7 @@ class LoginPage extends React.Component {
 	})
 
 	.then((response) => {
+	  console.log(response);
 	  if (response.data.success) {
 		localStorage.setItem('token', response.data.token);
 		this.setState({ 

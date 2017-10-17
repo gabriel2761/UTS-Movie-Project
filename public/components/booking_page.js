@@ -1,5 +1,6 @@
 import React from 'react';
 import BookingForm from './booking_form.js';
+import AdminBookingForm from './admin_booking_form.js';
 import {Link, Redirect} from 'react-router-dom';
 import axios from 'axios';
 
@@ -28,13 +29,39 @@ class BookingPage extends React.Component {
 	    email: this.state.email
 	  }
 	})
+
 	.then((response) => {
-	  console.log(response.data);
 	  if (response.data[0].time === 'No bookings found') {
 	    this.setState({
 	      bookingsMsg: response.data[0].time
 	    });
-	    response.data.splice(0, 1);
+	  } else {
+	    this.setState({
+	  	bookings: response.data,
+		bookingsMsg: "",
+	    });
+	  }
+	})
+
+	.catch((error) => {
+	  console.log(error);
+	});
+  }
+
+  _adminUpdateBookings() {
+	axios.get('/adminBookings', {
+	  headers: { Authorization: 'Bearer '.concat(localStorage.getItem('token')) },
+	  params: {
+	    email: this.state.email
+	  }
+	})
+
+	.then((response) => {
+	  console.log(response.data);
+	  if (response.data.length < 1) {
+	    this.setState({
+	      bookingsMsg: 'No bookings found'
+	    });
 	  }
 	  this.setState({
 		bookings: response.data
@@ -44,6 +71,7 @@ class BookingPage extends React.Component {
 	.catch((error) => {
 	  console.log(error);
 	});
+
   }
 
   _deleteBooking(id) {
@@ -54,7 +82,7 @@ class BookingPage extends React.Component {
 	})
 
 	.then((response) => {
-	  this._updateBookings();
+	  this._adminUpdateBookings();
 	})
 
 	.catch((error) => {
@@ -70,7 +98,7 @@ class BookingPage extends React.Component {
 	})
 
 	.then((response) => {
-	  this._updateBookings();
+	  this._adminUpdateBookings();
 	})
 
 	.catch((error) => {
@@ -86,7 +114,7 @@ class BookingPage extends React.Component {
 	})
 
 	.then((response) => {
-	  this._updateBookings();
+	  this._adminUpdateBookings();
 	})
 
 	.catch((error) => {
@@ -114,6 +142,14 @@ class BookingPage extends React.Component {
 	});
   }
 
+  _createUser() {
+  
+  }
+
+  _getEmail() {
+    return this.state.email;
+  }
+
   componentWillMount() {
     if (this.props.location.state !== undefined) {
       this.setState({
@@ -126,7 +162,11 @@ class BookingPage extends React.Component {
 
   componentDidMount() {
 	if (this.state.loggedIn) {
-		this._updateBookings();
+		if (this.state.admin) {
+			this._adminUpdateBookings();
+		} else {
+			this._updateBookings();
+		}
 	}
   }
 
@@ -141,7 +181,56 @@ class BookingPage extends React.Component {
 		<h5>Admin User</h5>
 		<Link to='/logout'>Logout</Link>
 	      </div>
-	      <BookingForm updateBookings={this._updateBookings.bind(this)} />
+	      <div className="w3-card-4 w3-margin">
+	        <div className="w3-container w3-dark-grey">
+		  <h3>Create User</h3>
+		</div>
+		<form className="w3-container" onSubmit={this._createUser.bind(this)}>
+		  <p><input className="w3-input w3-border w3-sand" type="text" placeholder="Email" ref={username => this.username = username} /></p>
+		  <p><input className="w3-input w3-border w3-sand" type="password" placeholder="Password" ref={password => this.password = password} /></p>
+		  <p>Admin User: <input type="checkbox" value="admin"/></p>
+		  <p><button className="w3-button w3-teal" type="submit">Create User</button></p>
+		</form>
+	      </div>
+	      <AdminBookingForm getEmail={this._getEmail.bind(this)} adminUpdateBookings={this._adminUpdateBookings.bind(this)} />
+	      <div className="w3-card-4 w3-margin">
+	        <table className="w3-table-all">
+	          <thead>
+		    <tr className="w3-dark-grey">
+		      <th>User Email</th>
+		      <th>Date</th>
+		      <th>Time</th>
+		      <th>Approval Status</th>
+		      <th>Cancelled?</th>
+		      <th></th>
+		      <th></th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  {this.state.bookings.map((booking, key) =>
+		    <tr key={key}>
+		      <td>{booking.email}</td>
+		      <td>{booking.date}</td>
+		      <td>{booking.time}</td>
+		      <td>{booking.approved ? 'Approved' : 'Not Approved'}</td>
+		      <td>{booking.cancelled ? 'Cancelled' : 'Not Cancelled'}</td>
+		      <td>
+		        <button className="w3-button w3-teal" onClick={this._approveBooking.bind(this, booking._id)}>Approve</button>
+		      </td>
+                      <td>
+		        <button className="w3-button w3-teal" onClick={this._unapproveBooking.bind(this, booking._id)}>Un-Approve</button>
+		      </td>
+                      <td>
+		        <button className="w3-button w3-teal" onClick={this._deleteBooking.bind(this, booking._id)}>Delete</button>
+		      </td>
+		    </tr>
+		  )}
+		  </tbody>
+	        </table>
+	        <p className="alert-msg">{this.state.bookingsMsg}</p>
+	      </div>
+	  
 	    </div>
 	  )	
 	} else {
@@ -151,32 +240,32 @@ class BookingPage extends React.Component {
 		<h1>Patient Booking System</h1>
 		<Link to='/logout'>Logout</Link>
 	      </div>	
-	      <BookingForm email={this.state.email} updateBookings={this._updateBookings.bind(this)} />
-	      <div className="w3-car-4 w3-margin">
-	      <table className="w3-table-all">
-	        <thead>
-		  <tr className="w3-dark-grey">
-		    <th>Date</th>
-		    <th>Time</th>
-		    <th>Approval Status</th>
-		    <th>Cancelled?</th>
-		    <th></th>
-		  </tr>
-		</thead>
-		<tbody>
-		{this.state.bookings.map((booking, key) =>
-		  <tr key={key}>
-		    <td>{booking.date}</td>
-		    <td>{booking.time}</td>
-		    <td>{booking.approved ? 'Approved' : 'Not Approved'}</td>
-		    <td>{booking.cancelled ? 'Cancelled' : 'Not Cancelled'}</td>
-		    <td>
-		      <button className="w3-button w3-teal" onClick={this._cancelBooking.bind(this, booking._id)}>Cancel</button>
-		    </td>
-		  </tr>
-		)}
-		</tbody>
-	      </table>
+	      <BookingForm getEmail={this._getEmail.bind(this)} updateBookings={this._updateBookings.bind(this)} />
+	      <div className="w3-card-4 w3-margin">
+	        <table className="w3-table-all">
+	          <thead>
+		    <tr className="w3-dark-grey">
+		      <th>Date</th>
+		      <th>Time</th>
+		      <th>Approval Status</th>
+		      <th>Cancelled?</th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  {this.state.bookings.map((booking, key) =>
+		    <tr key={key}>
+		      <td>{booking.date}</td>
+		      <td>{booking.time}</td>
+		      <td>{booking.approved ? 'Approved' : 'Not Approved'}</td>
+		      <td>{booking.cancelled ? 'Cancelled' : 'Not Cancelled'}</td>
+		      <td>
+		        <button className="w3-button w3-teal" onClick={this._cancelBooking.bind(this, booking._id)}>Cancel</button>
+		      </td>
+		    </tr>
+		  )}
+		  </tbody>
+	        </table>
 	        <p className="alert-msg">{this.state.bookingsMsg}</p>
 	      </div>
 	    </div>

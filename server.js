@@ -58,11 +58,12 @@ app.post('/login', (request, response, next) => {
     if (!user) {
       return response.send(info);
     }
+    console.log(user);
     return response.send({
 	    success: true, 
 	    token: user.token, 
 	    admin: user.local.admin, 
-	    email: user.local.email
+	    email: user.local.username
     });
   })(request, response, next);
 });
@@ -83,8 +84,7 @@ app.post('/signup', (request, response, next) => {
 });
 
 app.get('/bookings', (request, response) => {
-	console.log(request.params.email);
-  	bookingHandler.getBookings(request.params.email, (data) => {
+  	bookingHandler.getBookings(request.query.email, (data) => {
 		response.send(data);
 	});
 });
@@ -95,10 +95,24 @@ app.post('/book', (request, response) => {
 	});
 });
 
+app.post('/adminBook', (request, response) => {
+	bookingHandler.adminMakeBooking(request.body, (data) => {
+		response.send(data);
+	});
+});
+
+
 app.put('/cancelBooking', (request, response) => {
 	bookingHandler.cancelBooking(request.body.email, request.body.id, (data) => {
 		response.send(data);
 	})
+});
+
+app.get('/adminBookings', (request, response) => {
+	console.log(request.params.email);
+  	bookingHandler.adminGetBookings(request.params.email, (data) => {
+		response.send(data);
+	});
 });
 
 app.post('/delete_booking', (request, response) => {
